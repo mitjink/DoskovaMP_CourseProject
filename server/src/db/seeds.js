@@ -20,21 +20,11 @@ const seed = async () => {
         await db.query('ALTER SEQUENCE groups_id_seq RESTART WITH 1');
         await db.query('ALTER SEQUENCE user_subscriptions_id_seq RESTART WITH 1');
 
-        const hash = await bcrypt.hash('password123', 10);
-
-        const users = [
-            { email: 'admin@example.com', password: 'admin123', fullName: 'Администратор', role: 'admin' },
-            { email: 'ivanov@example.com', password: 'ivanov123', fullName: 'Иванов Иван Иванович', role: 'client' },
-            { email: 'petrova@example.com', password: 'petrova123', fullName: 'Петрова Мария Сергеевна', role: 'client' }
-        ];
-
-        for (const user of users) {
-            const hash = await bcrypt.hash(user.password, 10);
-            await db.query(
-                'INSERT INTO users (email, password_hash, full_name, role) VALUES ($1, $2, $3, $4)',
-                [user.email, hash, user.fullName, user.role]
-            );
-        }
+        const adminHash = await bcrypt.hash('admin123', 10);
+        await db.query(
+            'INSERT INTO users (email, password_hash, full_name, role) VALUES ($1, $2, $3, $4)',
+            ['admin@example.com', adminHash, 'Администратор', 'admin']
+        );
 
         await db.query(`
             INSERT INTO pools (name, address, type) VALUES
@@ -86,17 +76,6 @@ const seed = async () => {
             'Группа 3', 'adults', 1, 3,
             'Группа 4', 'beginners', 2, 2,
             'Группа 5', 'athletes', 3, 4
-        ]);
-
-        await db.query(`
-            INSERT INTO user_subscriptions (user_id, subscription_id, group_id, purchase_date) VALUES
-            ($1, $2, $3, $4),
-            ($5, $6, $7, $8),
-            ($9, $10, $11, $12)
-        `, [
-            2, 2, 1, '2026-05-01',
-            2, 3, 3, '2026-05-10',
-            3, 2, 4, '2026-05-15'
         ]);
 
         console.log('База данных успешно заполнена');

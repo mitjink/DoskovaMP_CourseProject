@@ -9,4 +9,4 @@ router.get('/refresh', authController.refresh);
 router.get('/me', authMiddleware, authController.getMe);
 router.post('/logout', authMiddleware, authController.logout);
 
-module.exports = router;cd 
+module.exports = router;

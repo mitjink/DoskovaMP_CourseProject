@@ -220,7 +220,7 @@ const getMe = async (req, res) => {
         const userId = req.user.id;
         
         const result = await db.query(
-            'SELECT id, email, full_name, role, phone FROM users WHERE id = $1',
+            'SELECT id, email, full_name, role FROM users WHERE id = $1',
             [userId]
         );
         

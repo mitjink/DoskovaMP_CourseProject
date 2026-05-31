@@ -9,6 +9,6 @@ router.get('/:id', groupController.getById);
 router.get('/pool/:poolId', groupController.getByPoolId);
 router.post('/', authMiddleware, roleMiddleware('admin'), groupController.create);
 router.patch('/:id', authMiddleware, roleMiddleware('admin'), groupController.update);
-router.delete('/:id', authMiddleware, roleMiddleware('admin'), groupController.delete);
+router.delete('/:id', authMiddleware, roleMiddleware('admin'), groupController.deleteGroup);
 
 module.exports = router;

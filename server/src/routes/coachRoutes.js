@@ -9,6 +9,6 @@ router.get('/:id', coachController.getById);
 router.get('/pool/:poolId', coachController.getByPoolId);
 router.post('/', authMiddleware, roleMiddleware('admin'), coachController.create);
 router.patch('/:id', authMiddleware, roleMiddleware('admin'), coachController.update);
-router.delete('/:id', authMiddleware, roleMiddleware('admin'), coachController.delete);
+router.delete('/:id', authMiddleware, roleMiddleware('admin'), coachController.deleteCoach);
 
 module.exports = router;

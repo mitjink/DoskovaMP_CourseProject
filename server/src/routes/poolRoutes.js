@@ -8,6 +8,6 @@ router.get('/', poolController.getAll);
 router.get('/:id', poolController.getById);
 router.post('/', authMiddleware, roleMiddleware('admin'), poolController.create);
 router.patch('/:id', authMiddleware, roleMiddleware('admin'), poolController.update);
-router.delete('/:id', authMiddleware, roleMiddleware('admin'), poolController.delete);
+router.delete('/:id', authMiddleware, roleMiddleware('admin'), poolController.deletePool);
 
 module.exports = router;
