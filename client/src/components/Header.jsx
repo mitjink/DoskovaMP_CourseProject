@@ -12,7 +12,7 @@ const Header = () => {
     };
 
     return (
-        <header className="header">
+        <header>
             <div className="header-top">
                 <div className="header-top-container">
                     {user && (
@@ -23,8 +23,8 @@ const Header = () => {
                 </div>
             </div>
 
-            <div className="header-main">
-                <div className="header-container">
+            <div className="nav-container">
+                <div className="nav-wrapper">
                     <div className="logo">
                         <Link to="/" className="logo-link">MyPool</Link>
                     </div>

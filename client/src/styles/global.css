@@ -9,35 +9,53 @@
 body {
     font-family: 'Ysabeau Infant', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    background-color: #F8F9FA;
+    background-color: #f5f5f5;
     color: #1A1A2E;
-    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-body.dark-theme {
-    background-color: #1A1A2E;
-    color: #E5E5E5;
+.header-top {
+    background-color: #999999;
+    width: 100%;
+    padding: 0.5rem 0;
 }
 
-/* Header */
-.header {
-    background-color: #023E8A;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-body.dark-theme .header {
-    background-color: #0A1628;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-.header-container {
+.header-top-container {
     max-width: 1110px;
-    height: 96px;
+    width: 100%;
     margin: 0 auto;
     padding: 0 1rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.logout-top-btn {
+    background-color: white;
+    color: #333;
+    border: none;
+    border-radius: 20px;
+    padding: 0.3rem 1rem;
+    font-family: 'Ysabeau Infant', sans-serif;
+    font-size: 1.125rem;
+    cursor: pointer;
+}
+
+.logout-top-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.nav-container {
+    max-width: 1110px;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 64px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 1rem;
+}
+
+.nav-wrapper {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -47,12 +65,10 @@ body.dark-theme .header {
 
 .logo-link {
     font-family: 'Irish Grover', cursive;
-    font-size: 1.8rem;
+    font-size: 2.5rem;
     font-weight: 400;
-    color: white;
+    color: #0077B6;
     text-decoration: none;
-    letter-spacing: 1px;
-    transition: opacity 0.2s;
 }
 
 .logo-link:hover {
@@ -62,55 +78,20 @@ body.dark-theme .header {
 .nav-list {
     display: flex;
     list-style: none;
-    gap: 2rem;
+    gap: 2.5rem;
 }
 
 .nav-link {
     font-family: 'Ysabeau Infant', sans-serif;
-    color: white;
+    color: #0077B6;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 1.5rem;
     font-weight: 500;
     padding: 0.5rem 0;
-    transition: border-bottom 0.2s;
 }
 
 .nav-link:hover {
-    border-bottom: 2px solid white;
-}
-
-.user-menu {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: white;
-    font-family: 'Ysabeau Infant', sans-serif;
-}
-
-.user-name {
-    font-size: 0.9rem;
-}
-
-.logout-btn {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    color: white;
-    font-family: 'Ysabeau Infant', sans-serif;
-    padding: 0.3rem 0.8rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background 0.2s;
-}
-
-.logout-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    border-bottom: 2px solid #0077B6;
 }
 
 .auth-buttons {
@@ -119,49 +100,192 @@ body.dark-theme .header {
 }
 
 .login-btn, .register-btn {
-    color: white;
     text-decoration: none;
     font-family: 'Ysabeau Infant', sans-serif;
-    padding: 0.3rem 0.8rem;
-    border-radius: 4px;
-    transition: background 0.2s;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
 }
 
 .login-btn {
-    background: rgba(255, 255, 255, 0.2);
+    background-color: #999999;
+    color: white;
+    border: none;
 }
 
 .login-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background-color: #777777;
 }
 
 .register-btn {
-    background: #0077B6;
+    background-color: #0077B6;
+    color: white;
 }
 
 .register-btn:hover {
-    background: #005f8c;
+    background-color: #005f8c;
 }
 
-/* Main content */
-.main-content {
-    min-height: calc(100vh - 96px - 100px);
-    padding: 2rem 0;
-}
-
-.container {
+.content-container {
     max-width: 1110px;
+    width: 100%;
     margin: 0 auto;
-    padding: 0 1rem;
+    margin-top: 64px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* Auth pages */
+.content-wrapper {
+    width: 100%;
+    padding: 2rem;
+    min-height: 400px;
+}
+
+.card {
+    background-color: #f5f5f5;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-content {
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-family: 'Ysabeau Infant', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #0077B6;
+}
+
+.card-text {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.pools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.coaches-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.groups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.subscriptions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.footer-container {
+    max-width: 1110px;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 64px;
+    margin-bottom: 64px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.footer-wrapper {
+    width: 100%;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.footer-copyright p {
+    font-size: 1rem;
+    opacity: 0.9;
+    font-family: 'Ysabeau Infant', sans-serif;
+    color: #1A1A2E;
+    text-align: center;
+}
+
+.footer-info p {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    max-width: 500px;
+    text-align: right;
+    font-family: 'Ysabeau Infant', sans-serif;
+    color: #1A1A2E;
+}
+
+.page-title {
+    font-family: 'Irish Grover', cursive;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: 400;
+    color: #0077B6;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #0077B6;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-family: 'Ysabeau Infant', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.btn:hover {
+    background-color: #023E8A;
+}
+
+.btn-danger {
+    background-color: #d9534f;
+}
+
+.btn-danger:hover {
+    background-color: #c9302c;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
 .auth-page {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #F8F9FA;
+    background-color: #f5f5f5;
 }
 
 .auth-card {
@@ -177,7 +301,7 @@ body.dark-theme .header {
     font-family: 'Irish Grover', cursive;
     margin-bottom: 1.5rem;
     text-align: center;
-    color: #023E8A;
+    color: #0077B6;
     font-size: 1.8rem;
     font-weight: 400;
 }
@@ -186,7 +310,7 @@ body.dark-theme .header {
     font-family: 'Ysabeau Infant', sans-serif;
     margin-bottom: 1.5rem;
     text-align: center;
-    color: #023E8A;
+    color: #0077B6;
 }
 
 .form-group {
@@ -222,12 +346,11 @@ button[type="submit"] {
     background-color: #0077B6;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 20px;
     font-size: 1rem;
     font-family: 'Ysabeau Infant', sans-serif;
     cursor: pointer;
     margin-top: 1rem;
-    transition: background 0.2s;
 }
 
 button[type="submit"]:hover {
@@ -238,7 +361,7 @@ button[type="submit"]:hover {
     background-color: #f8d7da;
     color: #721c24;
     padding: 0.5rem;
-    border-radius: 4px;
+    border-radius: 8px;
     margin-bottom: 1rem;
     text-align: center;
     font-family: 'Ysabeau Infant', sans-serif;
@@ -248,7 +371,7 @@ button[type="submit"]:hover {
     background-color: #d4edda;
     color: #155724;
     padding: 0.5rem;
-    border-radius: 4px;
+    border-radius: 8px;
     margin-bottom: 1rem;
     text-align: center;
     font-family: 'Ysabeau Infant', sans-serif;
@@ -269,135 +392,18 @@ button[type="submit"]:hover {
     text-decoration: underline;
 }
 
-/* Page title */
-.page-title {
-    font-family: 'Irish Grover', cursive;
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    font-weight: 400;
-    color: #023E8A;
-}
-
-body.dark-theme .page-title {
-    color: #4A9EFF;
-}
-
-/* Cards (pools, coaches, groups, subscriptions) */
-.card {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
-    margin-bottom: 1rem;
-}
-
-.card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-body.dark-theme .card {
-    background: #2A2A3E;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-body.dark-theme .card:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-}
-
-.card-content {
-    padding: 1.5rem;
-}
-
-.card-title {
-    font-family: 'Ysabeau Infant', sans-serif;
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    color: #023E8A;
-}
-
-body.dark-theme .card-title {
-    color: #4A9EFF;
-}
-
-.card-text {
-    font-size: 0.95rem;
-    color: #555;
-    margin-bottom: 0.5rem;
-}
-
-body.dark-theme .card-text {
-    color: #CCCCCC;
-}
-
-/* Grid layouts */
-.pools-grid,
-.coaches-grid,
-.groups-grid,
-.subscriptions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
-}
-
-/* Buttons */
-.btn {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    background-color: #0077B6;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-family: 'Ysabeau Infant', sans-serif;
-    font-size: 0.9rem;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.2s;
-    margin-right: 0.5rem;
-    margin-top: 0.5rem;
-}
-
-.btn:hover {
-    background-color: #023E8A;
-}
-
-.btn-danger {
-    background-color: #d9534f;
-}
-
-.btn-danger:hover {
-    background-color: #c9302c;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-}
-
-.btn-secondary:hover {
-    background-color: #5a6268;
-}
-
-/* Forms */
 .form-container {
-    background: white;
+    background-color: #f5f5f5;
     border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 2rem;
-    border: 1px solid #ddd;
-}
-
-body.dark-theme .form-container {
-    background: #2A2A3E;
-    border-color: #444;
 }
 
 .form-title {
     font-family: 'Irish Grover', cursive;
     font-size: 1.5rem;
     margin-bottom: 1rem;
-    color: #023E8A;
+    color: #0077B6;
     font-weight: 400;
 }
 
@@ -419,6 +425,7 @@ body.dark-theme .form-container {
     border: 1px solid #ddd;
     border-radius: 6px;
     font-family: 'Ysabeau Infant', sans-serif;
+    background-color: white;
 }
 
 .form-actions {
@@ -427,7 +434,10 @@ body.dark-theme .form-container {
     margin-top: 1rem;
 }
 
-/* Modal */
+.form-actions button {
+    border-radius: 20px;
+}
+
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -449,15 +459,11 @@ body.dark-theme .form-container {
     max-width: 500px;
 }
 
-body.dark-theme .modal-content {
-    background: #2A2A3E;
-}
-
 .modal-title {
     font-family: 'Irish Grover', cursive;
     font-size: 1.5rem;
     margin-bottom: 1rem;
-    color: #023E8A;
+    color: #0077B6;
 }
 
 .modal-actions {
@@ -466,45 +472,10 @@ body.dark-theme .modal-content {
     margin-top: 1rem;
 }
 
-/* Footer */
-.footer {
-    background-color: #023E8A;
-    color: white;
-    padding: 1.5rem 0;
-    margin-top: 2rem;
+.modal-actions button {
+    border-radius: 20px;
 }
 
-body.dark-theme .footer {
-    background-color: #0A1628;
-}
-
-.footer-container {
-    max-width: 1110px;
-    height: 96px;
-    margin: 0 auto;
-    padding: 0 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.footer-copyright p {
-    font-size: 0.9rem;
-    opacity: 0.9;
-    font-family: 'Ysabeau Infant', sans-serif;
-}
-
-.footer-info p {
-    font-size: 0.85rem;
-    opacity: 0.8;
-    max-width: 500px;
-    text-align: right;
-    font-family: 'Ysabeau Infant', sans-serif;
-}
-
-/* Reports page */
 .report-buttons {
     display: flex;
     gap: 1rem;
@@ -514,36 +485,30 @@ body.dark-theme .footer {
 
 .report-buttons .btn {
     margin: 0;
+    border-radius: 20px;
 }
 
 .report-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
+    background-color: #f5f5f5;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 .report-table th,
 .report-table td {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 10px;
     text-align: left;
 }
 
 .report-table th {
-    background-color: #f0f0f0;
+    background-color: #e0e0e0;
     font-weight: 600;
 }
 
-body.dark-theme .report-table th,
-body.dark-theme .report-table td {
-    border-color: #444;
-}
-
-body.dark-theme .report-table th {
-    background-color: #3A3A4E;
-}
-
-/* Admin panel */
 .admin-panel {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -552,7 +517,7 @@ body.dark-theme .report-table th {
 }
 
 .admin-card {
-    background: white;
+    background-color: #f5f5f5;
     padding: 1.5rem;
     border-radius: 12px;
     text-align: center;
@@ -562,25 +527,16 @@ body.dark-theme .report-table th {
     display: block;
 }
 
-body.dark-theme .admin-card {
-    background: #2A2A3E;
-    color: #E5E5E5;
-}
-
 .admin-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .admin-card h3 {
     font-family: 'Irish Grover', cursive;
     font-size: 1.3rem;
     margin-bottom: 0.5rem;
-    color: #023E8A;
-}
-
-body.dark-theme .admin-card h3 {
-    color: #4A9EFF;
+    color: #0077B6;
 }
 
 .admin-card p {
@@ -588,47 +544,20 @@ body.dark-theme .admin-card h3 {
     color: #555;
 }
 
-body.dark-theme .admin-card p {
-    color: #CCCCCC;
-}
-
-/* Dark theme button */
-.theme-button {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    font-size: 1.3rem;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s;
-}
-
-.theme-button:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
-body.dark-theme .theme-button {
-    background: rgba(255, 255, 255, 0.15);
-}
-
-/* Responsive */
 @media (max-width: 768px) {
-    .header-container {
-        height: auto;
+    .nav-wrapper {
         flex-direction: column;
         text-align: center;
-        padding: 1rem;
     }
     
     .nav-list {
         flex-wrap: wrap;
         justify-content: center;
-        gap: 1rem;
+        gap: 1.5rem;
+    }
+    
+    .auth-buttons {
+        justify-content: center;
     }
     
     .pools-grid,
@@ -638,16 +567,13 @@ body.dark-theme .theme-button {
         grid-template-columns: 1fr;
     }
     
-    .footer-container {
-        height: auto;
+    .footer-wrapper {
         flex-direction: column;
         text-align: center;
-        padding: 1rem;
     }
     
-    
-    .container {
-        padding: 0 1rem;
+    .footer-info p {
+        text-align: center;
     }
     
     .page-title {
@@ -667,6 +593,18 @@ body.dark-theme .theme-button {
         font-size: 0.85rem;
         display: block;
         overflow-x: auto;
+    }
+    
+    .header-top-container {
+        padding: 0 1rem;
+    }
+    
+    .nav-container,
+    .content-container,
+    .footer-container {
+        width: calc(100% - 2rem);
+        margin-left: 1rem;
+        margin-right: 1rem;
     }
 }
 
