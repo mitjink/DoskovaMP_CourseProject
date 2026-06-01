@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api/v1',
+    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000/api/v1',
     withCredentials: true
 });
 
@@ -20,6 +20,12 @@ api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
+        
+        if (originalRequest.url?.includes('/auth/login') || 
+            originalRequest.url?.includes('/auth/register') ||
+            originalRequest.url?.includes('/auth/refresh')) {
+            return Promise.reject(error);
+        }
         
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;

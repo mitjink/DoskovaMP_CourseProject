@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getPasses, buySubscription } from '../api/subscriptions';
+import { getPasses, createPass, updatePass, deletePass, buySubscription } from '../api/subscriptions';
 import { getGroups } from '../api/groups';
 import { useAuth } from '../context/AuthContext';
 
@@ -12,7 +12,15 @@ const SubscriptionsPage = () => {
     const [showBuyModal, setShowBuyModal] = useState(false);
     const [selectedPass, setSelectedPass] = useState(null);
     const [selectedGroupId, setSelectedGroupId] = useState('');
+    const [showForm, setShowForm] = useState(false);
+    const [editingPass, setEditingPass] = useState(null);
+    const [formData, setFormData] = useState({
+        name: '',
+        frequency: 1,
+        price: ''
+    });
     const { user } = useAuth();
+    const isAdmin = user?.role === 'admin';
     const isClient = user?.role === 'client';
 
     useEffect(() => {
@@ -31,6 +39,51 @@ const SubscriptionsPage = () => {
             setError('Ошибка загрузки данных');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            if (editingPass) {
+                await updatePass(editingPass.id, formData);
+                setSuccess('Абонемент обновлён');
+            } else {
+                await createPass(formData);
+                setSuccess('Абонемент создан');
+            }
+            setShowForm(false);
+            setEditingPass(null);
+            setFormData({ name: '', frequency: 1, price: '' });
+            fetchData();
+            setTimeout(() => setSuccess(''), 3000);
+        } catch (err) {
+            setError('Ошибка сохранения');
+            setTimeout(() => setError(''), 3000);
+        }
+    };
+
+    const handleEdit = (pass) => {
+        setEditingPass(pass);
+        setFormData({
+            name: pass.name,
+            frequency: pass.frequency,
+            price: pass.price
+        });
+        setShowForm(true);
+    };
+
+    const handleDelete = async (id) => {
+        if (window.confirm('Удалить абонемент?')) {
+            try {
+                await deletePass(id);
+                setSuccess('Абонемент удалён');
+                fetchData();
+                setTimeout(() => setSuccess(''), 3000);
+            } catch (err) {
+                setError('Ошибка удаления');
+                setTimeout(() => setError(''), 3000);
+            }
         }
     };
 
@@ -62,32 +115,96 @@ const SubscriptionsPage = () => {
 
     return (
         <div>
-            <h1>Абонементы</h1>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h1 className="page-title">Абонементы</h1>
+                {isAdmin && (
+                    <button className="btn" onClick={() => {
+                        setEditingPass(null);
+                        setFormData({ name: '', frequency: 1, price: '' });
+                        setShowForm(true);
+                    }}>
+                        Добавить абонемент
+                    </button>
+                )}
+            </div>
 
-            {error && <div style={{ color: 'red', padding: '0.5rem', background: '#ffebee' }}>{error}</div>}
-            {success && <div style={{ color: 'green', padding: '0.5rem', background: '#e8f5e9' }}>{success}</div>}
+            {error && <div className="error-message">{error}</div>}
+            {success && <div className="success-message">{success}</div>}
 
-            <div>
+            {showForm && (
+                <div className="form-container">
+                    <h3 className="form-title">{editingPass ? 'Редактировать' : 'Новый абонемент'}</h3>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-row">
+                            <label>Название</label>
+                            <input
+                                type="text"
+                                value={formData.name}
+                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                required
+                            />
+                        </div>
+                        <div className="form-row">
+                            <label>Частота (раз в неделю)</label>
+                            <select
+                                value={formData.frequency}
+                                onChange={(e) => setFormData({ ...formData, frequency: parseInt(e.target.value) })}
+                            >
+                                <option value={1}>1 раз в неделю</option>
+                                <option value={2}>2 раза в неделю</option>
+                                <option value={3}>3 раза в неделю</option>
+                                <option value={5}>5 раз в неделю</option>
+                            </select>
+                        </div>
+                        <div className="form-row">
+                            <label>Цена (руб.)</label>
+                            <input
+                                type="number"
+                                value={formData.price}
+                                onChange={(e) => setFormData({ ...formData, price: parseInt(e.target.value) })}
+                                required
+                            />
+                        </div>
+                        <div className="form-actions">
+                            <button type="submit" className="btn">Сохранить</button>
+                            <button type="button" className="btn btn-secondary" onClick={() => {
+                                setShowForm(false);
+                                setEditingPass(null);
+                            }}>Отмена</button>
+                        </div>
+                    </form>
+                </div>
+            )}
+
+            <div className="subscriptions-grid">
                 {passes.map(pass => (
-                    <div key={pass.id} style={{ border: '1px solid #ddd', padding: '1rem', margin: '0.5rem 0' }}>
-                        <h3>{pass.name}</h3>
-                        <p>Частота: {pass.frequency} раз в неделю</p>
-                        <p>Цена: {pass.price} руб.</p>
-                        {isClient && (
-                            <button onClick={() => handleBuyClick(pass)}>Купить абонемент</button>
-                        )}
+                    <div key={pass.id} className="card">
+                        <div className="card-content">
+                            <h3 className="card-title">{pass.name}</h3>
+                            <p className="card-text">{pass.frequency} раз в неделю</p>
+                            <p className="card-text">{pass.price} руб.</p>
+                            {isAdmin && (
+                                <div className="card-buttons">
+                                    <button className="btn btn-edit" onClick={() => handleEdit(pool)}>Редактировать</button>
+                                    <button className="btn btn-delete" onClick={() => handleDelete(pool.id)}>Удалить</button>
+                                </div>
+                            )}
+                            {isClient && (
+                                <button className="btn" onClick={() => handleBuyClick(pass)}>Купить</button>
+                            )}
+                        </div>
                     </div>
                 ))}
             </div>
 
             {showBuyModal && selectedPass && (
-                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <div style={{ background: 'white', padding: '2rem', borderRadius: '8px', minWidth: '300px' }}>
-                        <h3>Покупка абонемента</h3>
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h3 className="modal-title">Покупка абонемента</h3>
                         <p>Абонемент: {selectedPass.name}</p>
                         <p>Цена: {selectedPass.price} руб.</p>
                         <form onSubmit={handleBuySubmit}>
-                            <div>
+                            <div className="form-row">
                                 <label>Выберите группу</label>
                                 <select
                                     value={selectedGroupId}
@@ -97,17 +214,17 @@ const SubscriptionsPage = () => {
                                     <option value="">-- Выберите группу --</option>
                                     {groups.map(group => (
                                         <option key={group.id} value={group.id}>
-                                            {group.number} - {group.category} ({group.pool_name})
+                                            {group.number} - {group.category}
                                         </option>
                                     ))}
                                 </select>
                             </div>
-                            <div style={{ marginTop: '1rem' }}>
-                                <button type="submit">Оформить</button>
-                                <button type="button" onClick={() => setShowBuyModal(false)}>Отмена</button>
+                            <div className="modal-actions">
+                                <button type="submit" className="btn">Оформить</button>
+                                <button type="button" className="btn btn-secondary" onClick={() => setShowBuyModal(false)}>Отмена</button>
                             </div>
                         </form>
-                        <p style={{ fontSize: '0.8rem', color: '#666', marginTop: '1rem' }}>
+                        <p style={{ fontSize: '0.8rem', marginTop: '1rem' }}>
                             После оформления оплатите абонемент в спортивном клубе.
                         </p>
                     </div>

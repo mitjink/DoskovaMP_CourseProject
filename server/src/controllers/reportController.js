@@ -31,7 +31,7 @@ const getProfitByCoach = async (req, res) => {
                 COALESCE(SUM(s.price), 0) as total_revenue
             FROM coaches c
             JOIN pools p ON c.pool_id = p.id
-            LEFT JOIN groups g ON g.pool_id = p.id
+            LEFT JOIN groups g ON g.coach_id = c.id
             LEFT JOIN user_subscriptions us ON us.group_id = g.id
             LEFT JOIN subscriptions s ON us.subscription_id = s.id
             GROUP BY c.id, c.full_name, p.id, p.name
@@ -86,15 +86,13 @@ const getVisitorsByCoach = async (req, res) => {
             FROM users u
             JOIN user_subscriptions us ON us.user_id = u.id
             JOIN groups g ON us.group_id = g.id
-            JOIN pools p ON g.pool_id = p.id
-            JOIN coaches c ON c.pool_id = p.id
-            WHERE c.id = $1
+            WHERE g.coach_id = $1
             ORDER BY u.full_name
         `, [coachId]);
         
         res.json(result.rows);
     } catch (error) {
-        console.error(error);
+        console.error('Ошибка получения посетителей тренера:', error);
         res.status(500).json({ error: 'Ошибка формирования отчёта' });
     }
 };

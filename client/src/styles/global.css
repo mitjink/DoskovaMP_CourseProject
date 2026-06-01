@@ -11,6 +11,7 @@ body {
     line-height: 1.6;
     background-color: #f5f5f5;
     color: #1A1A2E;
+    font-size: 16px;
 }
 
 .header-top {
@@ -28,18 +29,19 @@ body {
     justify-content: flex-end;
 }
 
-.logout-top-btn {
+.logout-top-btn, .login-top-btn {
     background-color: white;
     color: #333;
     border: none;
     border-radius: 20px;
     padding: 0.3rem 1rem;
     font-family: 'Ysabeau Infant', sans-serif;
-    font-size: 1.125rem;
+    font-size: 1rem;
     cursor: pointer;
+    text-decoration: none;
 }
 
-.logout-top-btn:hover {
+.logout-top-btn:hover, .login-top-btn:hover {
     background-color: #f0f0f0;
 }
 
@@ -63,9 +65,13 @@ body {
     gap: 1rem;
 }
 
+.logo {
+    flex: 0 0 auto;
+}
+
 .logo-link {
     font-family: 'Irish Grover', cursive;
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 400;
     color: #0077B6;
     text-decoration: none;
@@ -75,17 +81,25 @@ body {
     opacity: 0.9;
 }
 
+.nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
 .nav-list {
     display: flex;
     list-style: none;
-    gap: 2.5rem;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
 }
 
 .nav-link {
     font-family: 'Ysabeau Infant', sans-serif;
     color: #0077B6;
     text-decoration: none;
-    font-size: 1.5rem;
+    font-size: 1.7rem;
     font-weight: 500;
     padding: 0.5rem 0;
 }
@@ -95,6 +109,7 @@ body {
 }
 
 .auth-buttons {
+    flex: 0 0 auto;
     display: flex;
     gap: 0.5rem;
 }
@@ -104,7 +119,7 @@ body {
     font-family: 'Ysabeau Infant', sans-serif;
     padding: 0.4rem 1rem;
     border-radius: 20px;
-    font-size: 0.9rem;
+    font-size: 1.15rem;
 }
 
 .login-btn {
@@ -142,12 +157,32 @@ body {
     min-height: 400px;
 }
 
+.page-title {
+    font-family: 'Irish Grover', cursive;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: 400;
+    color: #0077B6;
+}
+
+.pools-grid,
+.coaches-grid,
+.groups-grid,
+.subscriptions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
 .card {
     background-color: #f5f5f5;
-    border-radius: 12px;
+    border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .card:hover {
@@ -157,44 +192,87 @@ body {
 
 .card-content {
     padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .card-title {
     font-family: 'Ysabeau Infant', sans-serif;
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     font-weight: 600;
     margin-bottom: 0.75rem;
     color: #0077B6;
 }
 
 .card-text {
-    font-size: 0.95rem;
-    color: #555;
+    font-family: 'Ysabeau Infant', sans-serif;
+    font-size: 1.15rem;
+    color: #1A1A2E;
     margin-bottom: 0.5rem;
 }
 
-.pools-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1.5rem;
+.card-buttons {
+    margin-top: auto;
+    padding-top: 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
-.coaches-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
+.card-buttons .btn {
+    margin: 0;
 }
 
-.groups-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #0077B6;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-family: 'Ysabeau Infant', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-size: 1rem;
 }
 
-.subscriptions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1.5rem;
+.btn:hover {
+    background-color: #005f8c;
+    transform: scale(1.02);
+}
+
+.btn-edit {
+    background-color: #ffffff;
+    color: #0077B6;
+    border: 1px solid #0077B6;
+}
+
+.btn-edit:hover {
+    background-color: #0077B6;
+    color: white;
+}
+
+.btn-delete {
+    background-color: #ffffff;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+}
+
+.btn-delete:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #999999;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #777777;
 }
 
 .footer-container {
@@ -212,72 +290,16 @@ body {
     width: 100%;
     padding: 1.5rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
-    font-size: 1rem;
-    text-align: center;
 }
 
 .footer-copyright p {
+    font-family: 'Ysabeau Infant', sans-serif;
     font-size: 1rem;
-    opacity: 0.9;
-    font-family: 'Ysabeau Infant', sans-serif;
     color: #1A1A2E;
-    text-align: center;
-}
-
-.footer-info p {
-    font-size: 0.85rem;
-    opacity: 0.8;
-    max-width: 500px;
-    text-align: right;
-    font-family: 'Ysabeau Infant', sans-serif;
-    color: #1A1A2E;
-}
-
-.page-title {
-    font-family: 'Irish Grover', cursive;
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    font-weight: 400;
-    color: #0077B6;
-}
-
-.btn {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    background-color: #0077B6;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    font-family: 'Ysabeau Infant', sans-serif;
-    font-size: 0.9rem;
-    cursor: pointer;
-    text-decoration: none;
-    margin-right: 0.5rem;
-    margin-top: 0.5rem;
-}
-
-.btn:hover {
-    background-color: #023E8A;
-}
-
-.btn-danger {
-    background-color: #d9534f;
-}
-
-.btn-danger:hover {
-    background-color: #c9302c;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-}
-
-.btn-secondary:hover {
-    background-color: #5a6268;
 }
 
 .auth-page {
@@ -291,7 +313,7 @@ body {
 .auth-card {
     background: white;
     padding: 2rem;
-    border-radius: 12px;
+    border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 400px;
@@ -306,13 +328,6 @@ body {
     font-weight: 400;
 }
 
-.auth-card h2 {
-    font-family: 'Ysabeau Infant', sans-serif;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    color: #0077B6;
-}
-
 .form-group {
     margin-bottom: 1rem;
 }
@@ -322,6 +337,7 @@ body {
     margin-bottom: 0.3rem;
     font-weight: 500;
     font-family: 'Ysabeau Infant', sans-serif;
+    font-size: 1rem;
 }
 
 .form-group input,
@@ -329,8 +345,20 @@ body {
     width: 100%;
     padding: 0.6rem;
     border: 1px solid #ddd;
-    border-radius: 6px;
+    border-radius: 8px;
     font-family: 'Ysabeau Infant', sans-serif;
+    font-size: 1rem;
+}
+
+.form-group label,
+.form-row label {
+    font-size: 1rem;
+}
+
+.form-group input,
+.form-group select,
+.form-row input,
+.form-row select {
     font-size: 1rem;
 }
 
@@ -354,7 +382,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-    background-color: #023E8A;
+    background-color: #005f8c;
 }
 
 .error-message {
@@ -377,6 +405,11 @@ button[type="submit"]:hover {
     font-family: 'Ysabeau Infant', sans-serif;
 }
 
+.error-message,
+.success-message {
+    font-size: 1rem;
+}
+
 .auth-link {
     text-align: center;
     margin-top: 1rem;
@@ -394,7 +427,7 @@ button[type="submit"]:hover {
 
 .form-container {
     background-color: #f5f5f5;
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 1.5rem;
     margin-bottom: 2rem;
 }
@@ -416,6 +449,7 @@ button[type="submit"]:hover {
     margin-bottom: 0.3rem;
     font-weight: 500;
     font-family: 'Ysabeau Infant', sans-serif;
+    font-size: 1rem;
 }
 
 .form-row input,
@@ -423,8 +457,9 @@ button[type="submit"]:hover {
     width: 100%;
     padding: 0.6rem;
     border: 1px solid #ddd;
-    border-radius: 6px;
+    border-radius: 8px;
     font-family: 'Ysabeau Infant', sans-serif;
+    font-size: 1rem;
     background-color: white;
 }
 
@@ -432,10 +467,6 @@ button[type="submit"]:hover {
     display: flex;
     gap: 0.5rem;
     margin-top: 1rem;
-}
-
-.form-actions button {
-    border-radius: 20px;
 }
 
 .modal-overlay {
@@ -454,7 +485,7 @@ button[type="submit"]:hover {
 .modal-content {
     background: white;
     padding: 2rem;
-    border-radius: 12px;
+    border-radius: 16px;
     min-width: 300px;
     max-width: 500px;
 }
@@ -464,16 +495,13 @@ button[type="submit"]:hover {
     font-size: 1.5rem;
     margin-bottom: 1rem;
     color: #0077B6;
+    font-weight: 400;
 }
 
 .modal-actions {
     display: flex;
     gap: 0.5rem;
     margin-top: 1rem;
-}
-
-.modal-actions button {
-    border-radius: 20px;
 }
 
 .report-buttons {
@@ -483,65 +511,28 @@ button[type="submit"]:hover {
     margin-bottom: 2rem;
 }
 
-.report-buttons .btn {
-    margin: 0;
-    border-radius: 20px;
-}
-
 .report-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
     background-color: #f5f5f5;
-    border-radius: 12px;
+    border-radius: 16px;
     overflow: hidden;
 }
 
 .report-table th,
 .report-table td {
     border: 1px solid #ddd;
-    padding: 10px;
+    padding: 12px;
     text-align: left;
+    font-family: 'Ysabeau Infant', sans-serif;
+    font-size: 1rem;
 }
 
 .report-table th {
     background-color: #e0e0e0;
     font-weight: 600;
-}
-
-.admin-panel {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
-}
-
-.admin-card {
-    background-color: #f5f5f5;
-    padding: 1.5rem;
-    border-radius: 12px;
-    text-align: center;
-    text-decoration: none;
-    color: #1A1A2E;
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: block;
-}
-
-.admin-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.admin-card h3 {
-    font-family: 'Irish Grover', cursive;
-    font-size: 1.3rem;
-    margin-bottom: 0.5rem;
     color: #0077B6;
-}
-
-.admin-card p {
-    font-size: 0.9rem;
-    color: #555;
 }
 
 @media (max-width: 768px) {
@@ -550,10 +541,14 @@ button[type="submit"]:hover {
         text-align: center;
     }
     
+    .nav {
+        width: 100%;
+    }
+    
     .nav-list {
         flex-wrap: wrap;
         justify-content: center;
-        gap: 1.5rem;
+        gap: 1rem;
     }
     
     .auth-buttons {
@@ -569,10 +564,6 @@ button[type="submit"]:hover {
     
     .footer-wrapper {
         flex-direction: column;
-        text-align: center;
-    }
-    
-    .footer-info p {
         text-align: center;
     }
     
@@ -597,14 +588,6 @@ button[type="submit"]:hover {
     
     .header-top-container {
         padding: 0 1rem;
-    }
-    
-    .nav-container,
-    .content-container,
-    .footer-container {
-        width: calc(100% - 2rem);
-        margin-left: 1rem;
-        margin-right: 1rem;
     }
 }
 

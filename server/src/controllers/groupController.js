@@ -3,10 +3,11 @@ const db = require('../config/database');
 const getAll = async (req, res) => {
     try {
         const result = await db.query(`
-            SELECT g.*, p.name as pool_name, s.name as subscription_name
+            SELECT g.*, p.name as pool_name, s.name as subscription_name, c.full_name as coach_name
             FROM groups g
             JOIN pools p ON g.pool_id = p.id
             JOIN subscriptions s ON g.subscription_id = s.id
+            LEFT JOIN coaches c ON g.coach_id = c.id
             ORDER BY g.id
         `);
         res.json(result.rows);
@@ -57,7 +58,7 @@ const getByPoolId = async (req, res) => {
 
 const create = async (req, res) => {
     try {
-        const { number, category, poolId, subscriptionId } = req.body;
+        const { number, category, poolId, subscriptionId, coachId } = req.body;
         
         if (!number || !category || !poolId || !subscriptionId) {
             return res.status(400).json({ error: 'Все поля обязательны' });
@@ -69,9 +70,9 @@ const create = async (req, res) => {
         }
         
         const result = await db.query(
-            `INSERT INTO groups (number, category, pool_id, subscription_id) 
-             VALUES ($1, $2, $3, $4) RETURNING *`,
-            [number, category, poolId, subscriptionId]
+            `INSERT INTO groups (number, category, pool_id, subscription_id, coach_id) 
+             VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+            [number, category, poolId, subscriptionId, coachId || null]
         );
         
         res.status(201).json(result.rows[0]);
@@ -81,10 +82,11 @@ const create = async (req, res) => {
     }
 };
 
+
 const update = async (req, res) => {
     try {
         const { id } = req.params;
-        const { number, category, poolId, subscriptionId } = req.body;
+        const { number, category, poolId, subscriptionId, coachId } = req.body;
         
         const updates = [];
         const values = [];
@@ -109,6 +111,10 @@ const update = async (req, res) => {
         if (subscriptionId !== undefined) {
             updates.push(`subscription_id = $${paramCount++}`);
             values.push(subscriptionId);
+        }
+        if (coachId !== undefined) {
+            updates.push(`coach_id = $${paramCount++}`);
+            values.push(coachId);
         }
         
         if (updates.length === 0) {

@@ -8,17 +8,21 @@ const Header = () => {
 
     const handleLogout = async () => {
         await logout();
-        navigate('/login');
+        navigate('/');
     };
 
     return (
         <header>
             <div className="header-top">
                 <div className="header-top-container">
-                    {user && (
+                    {user ? (
                         <button onClick={handleLogout} className="logout-top-btn">
                             Выйти
                         </button>
+                    ) : (
+                        <Link to="/login" className="login-top-btn">
+                            Войти
+                        </Link>
                     )}
                 </div>
             </div>
@@ -36,7 +40,6 @@ const Header = () => {
                             <li><Link to="/subscriptions" className="nav-link">Абонементы</Link></li>
                             {user && user.role === 'admin' && (
                                 <>
-                                    <li><Link to="/admin" className="nav-link">Управление</Link></li>
                                     <li><Link to="/reports" className="nav-link">Отчёты</Link></li>
                                 </>
                             )}
@@ -45,14 +48,6 @@ const Header = () => {
                             )}
                         </ul>
                     </nav>
-                    <div className="auth-buttons">
-                        {!user && (
-                            <>
-                                <Link to="/login" className="login-btn">Вход</Link>
-                                <Link to="/register" className="register-btn">Регистрация</Link>
-                            </>
-                        )}
-                    </div>
                 </div>
             </div>
         </header>

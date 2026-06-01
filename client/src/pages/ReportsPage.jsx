@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     getCoachesByPoolReport,
     getProfitByCoachReport,
@@ -16,15 +16,51 @@ const ReportsPage = () => {
     const [error, setError] = useState('');
     const [coaches, setCoaches] = useState([]);
     const [selectedCoachId, setSelectedCoachId] = useState('');
+    const [visitorsData, setVisitorsData] = useState(null);
+    const [visitorsLoading, setVisitorsLoading] = useState(false);
+
+    useEffect(() => {
+        loadCoaches();
+    }, []);
 
     const loadCoaches = async () => {
-        const response = await getCoaches();
-        setCoaches(response.data);
+        try {
+            const response = await getCoaches();
+            setCoaches(response.data);
+        } catch (err) {
+            console.error('Ошибка загрузки тренеров:', err);
+        }
+    };
+
+    // Загружаем посетителей при изменении выбранного тренера
+    useEffect(() => {
+        if (selectedCoachId && activeReport === 'visitors') {
+            loadVisitors();
+        }
+    }, [selectedCoachId]);
+
+    const loadVisitors = async () => {
+        setVisitorsLoading(true);
+        setError('');
+        try {
+            const response = await getVisitorsByCoachReport(selectedCoachId);
+            setVisitorsData(response.data);
+        } catch (err) {
+            console.error('Ошибка загрузки посетителей:', err);
+            setError('Ошибка загрузки посетителей');
+            setVisitorsData(null);
+        } finally {
+            setVisitorsLoading(false);
+        }
     };
 
     const fetchReport = async (reportName, apiCall, params = null) => {
         setLoading(true);
         setError('');
+        setActiveReport(reportName);
+        setVisitorsData(null);
+        setSelectedCoachId('');
+        
         try {
             let response;
             if (params) {
@@ -33,8 +69,8 @@ const ReportsPage = () => {
                 response = await apiCall();
             }
             setData(response.data);
-            setActiveReport(reportName);
         } catch (err) {
+            console.error('Ошибка загрузки отчёта:', err);
             setError('Ошибка загрузки отчёта');
             setData(null);
         } finally {
@@ -42,29 +78,43 @@ const ReportsPage = () => {
         }
     };
 
-    const handleVisitorsByCoach = async () => {
-        if (!selectedCoachId) {
-            setError('Выберите тренера');
-            return;
-        }
-        await fetchReport('visitors', getVisitorsByCoachReport, selectedCoachId);
-    };
-
     const renderData = () => {
+        if (activeReport === 'visitors') {
+            if (visitorsLoading) return <div>Загрузка посетителей...</div>;
+            if (!selectedCoachId) return <div>Выберите тренера из списка выше</div>;
+            if (!visitorsData || visitorsData.length === 0) return <div>Нет посетителей у этого тренера</div>;
+            
+            return (
+                <div className="coaches-grid">
+                    {visitorsData.map(visitor => (
+                        <div key={visitor.user_id} className="card">
+                            <div className="card-content">
+                                <h3 className="card-title">{visitor.full_name}</h3>
+                                <p className="card-text">Email: {visitor.email}</p>
+                                <p className="card-text">Группа: {visitor.group_number}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
         if (!data) return null;
 
         switch (activeReport) {
             case 'coachesByPool':
                 return (
-                    <div>
+                    <div className="coaches-grid">
                         {data.map(pool => (
-                            <div key={pool.pool_id} style={{ border: '1px solid #ddd', padding: '1rem', margin: '0.5rem 0' }}>
-                                <h3>{pool.pool_name}</h3>
-                                <ul>
-                                    {pool.coaches.map(coach => (
-                                        <li key={coach.id}>{coach.fullName}</li>
-                                    ))}
-                                </ul>
+                            <div key={pool.pool_id} className="card">
+                                <div className="card-content">
+                                    <h3 className="card-title">{pool.pool_name}</h3>
+                                    <ul style={{ marginTop: '0.5rem', paddingLeft: '1rem' }}>
+                                        {pool.coaches && pool.coaches.map(coach => (
+                                            <li key={coach.id} className="card-text">{coach.fullName}</li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -72,20 +122,20 @@ const ReportsPage = () => {
 
             case 'profitByCoach':
                 return (
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <table className="report-table">
                         <thead>
-                            <tr style={{ background: '#f0f0f0' }}>
-                                <th style={{ border: '1px solid #ddd', padding: '8px' }}>Тренер</th>
-                                <th style={{ border: '1px solid #ddd', padding: '8px' }}>Бассейн</th>
-                                <th style={{ border: '1px solid #ddd', padding: '8px' }}>Прибыль</th>
+                            <tr>
+                                <th>Тренер</th>
+                                <th>Бассейн</th>
+                                <th>Прибыль</th>
                             </tr>
                         </thead>
                         <tbody>
                             {data.map(item => (
                                 <tr key={`${item.coach_id}-${item.pool_id}`}>
-                                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.coach_name}</td>
-                                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.pool_name}</td>
-                                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.total_revenue} руб.</td>
+                                    <td>{item.coach_name}</td>
+                                    <td>{item.pool_name}</td>
+                                    <td>{item.total_revenue} руб.</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -94,60 +144,44 @@ const ReportsPage = () => {
 
             case 'coachesWithBeginners':
                 return (
-                    <ul>
+                    <div className="coaches-grid">
                         {data.map(coach => (
-                            <li key={coach.id}>{coach.full_name} - {coach.pool_name}</li>
+                            <div key={coach.id} className="card">
+                                <div className="card-content">
+                                    <h3 className="card-title">{coach.full_name}</h3>
+                                    <p className="card-text">Бассейн: {coach.pool_name}</p>
+                                </div>
+                            </div>
                         ))}
-                    </ul>
-                );
-
-            case 'visitors':
-                return (
-                    <div>
-                        {data.length === 0 ? (
-                            <p>Нет посетителей у этого тренера</p>
-                        ) : (
-                            <ul>
-                                {data.map(visitor => (
-                                    <li key={visitor.user_id}>
-                                        {visitor.full_name} ({visitor.email}) - группа {visitor.group_number}
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
                     </div>
                 );
 
             case 'groupsByDay':
                 return (
-                    <div>
+                    <div className="pools-grid">
                         {data.map(pool => (
-                            <div key={pool.poolId} style={{ border: '1px solid #ddd', padding: '1rem', margin: '0.5rem 0' }}>
-                                <h3>{pool.poolName}</h3>
-                                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                                    <thead>
-                                        <tr style={{ background: '#f0f0f0' }}>
-                                            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Пн</th>
-                                            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Вт</th>
-                                            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Ср</th>
-                                            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Чт</th>
-                                            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Пт</th>
-                                            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Сб</th>
-                                            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Вс</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{pool.groupsByDay[1]}</td>
-                                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{pool.groupsByDay[2]}</td>
-                                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{pool.groupsByDay[3]}</td>
-                                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{pool.groupsByDay[4]}</td>
-                                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{pool.groupsByDay[5]}</td>
-                                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{pool.groupsByDay[6]}</td>
-                                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{pool.groupsByDay[7]}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div key={pool.poolId} className="card">
+                                <div className="card-content">
+                                    <h3 className="card-title">{pool.poolName}</h3>
+                                    <table className="report-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th><th>Вс</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{pool.groupsByDay[1]}</td>
+                                                <td>{pool.groupsByDay[2]}</td>
+                                                <td>{pool.groupsByDay[3]}</td>
+                                                <td>{pool.groupsByDay[4]}</td>
+                                                <td>{pool.groupsByDay[5]}</td>
+                                                <td>{pool.groupsByDay[6]}</td>
+                                                <td>{pool.groupsByDay[7]}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -155,9 +189,11 @@ const ReportsPage = () => {
 
             case 'maxRevenue':
                 return (
-                    <div style={{ border: '1px solid #ccc', padding: '1rem', background: '#e8f5e9' }}>
-                        <h3>{data.pool_name}</h3>
-                        <p>Общая выручка: {data.total_revenue} руб.</p>
+                    <div className="card">
+                        <div className="card-content">
+                            <h3 className="card-title">{data.pool_name}</h3>
+                            <p className="card-text">Общая выручка: {data.total_revenue} руб.</p>
+                        </div>
                     </div>
                 );
 
@@ -168,42 +204,42 @@ const ReportsPage = () => {
 
     return (
         <div>
-            <h1>Аналитические отчёты</h1>
+            <h1 className="page-title">Аналитические отчёты</h1>
 
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
-                <button onClick={() => fetchReport('coachesByPool', getCoachesByPoolReport)}>
+            <div className="report-buttons">
+                <button className="btn" onClick={() => fetchReport('coachesByPool', getCoachesByPoolReport)}>
                     Тренеры по бассейнам
                 </button>
-                <button onClick={() => fetchReport('profitByCoach', getProfitByCoachReport)}>
+                <button className="btn" onClick={() => fetchReport('profitByCoach', getProfitByCoachReport)}>
                     Прибыль по тренерам
                 </button>
-                <button onClick={() => fetchReport('coachesWithBeginners', getCoachesWithBeginnersReport)}>
+                <button className="btn" onClick={() => fetchReport('coachesWithBeginners', getCoachesWithBeginnersReport)}>
                     Тренеры начинающих
                 </button>
-                <button onClick={() => {
-                    loadCoaches();
-                    setActiveReport(null);
-                    setSelectedCoachId('');
+                <button className="btn" onClick={() => {
+                    setActiveReport('visitors');
                     setData(null);
+                    setVisitorsData(null);
+                    setSelectedCoachId('');
+                    setError('');
                 }}>
                     Посетители тренера
                 </button>
-                <button onClick={() => fetchReport('groupsByDay', getGroupsByDayReport)}>
+                <button className="btn" onClick={() => fetchReport('groupsByDay', getGroupsByDayReport)}>
                     Группы по дням
                 </button>
-                <button onClick={() => fetchReport('maxRevenue', getPoolWithMaxRevenueReport)}>
+                <button className="btn" onClick={() => fetchReport('maxRevenue', getPoolWithMaxRevenueReport)}>
                     Бассейн с макс. выручкой
                 </button>
             </div>
 
             {activeReport === 'visitors' && (
-                <div style={{ marginBottom: '1rem', display: 'flex', gap: '0.5rem', alignItems: 'flex-end' }}>
-                    <div>
+                <div className="form-container" style={{ marginBottom: '1rem' }}>
+                    <div className="form-row">
                         <label>Выберите тренера</label>
                         <select
                             value={selectedCoachId}
                             onChange={(e) => setSelectedCoachId(e.target.value)}
-                            style={{ display: 'block', marginTop: '0.25rem', padding: '0.5rem', minWidth: '250px' }}
                         >
                             <option value="">-- Выберите тренера --</option>
                             {coaches.map(coach => (
@@ -211,12 +247,11 @@ const ReportsPage = () => {
                             ))}
                         </select>
                     </div>
-                    <button onClick={handleVisitorsByCoach}>Показать</button>
                 </div>
             )}
 
             {loading && <div>Загрузка...</div>}
-            {error && <div style={{ color: 'red' }}>{error}</div>}
+            {error && <div className="error-message">{error}</div>}
             {renderData()}
         </div>
     );

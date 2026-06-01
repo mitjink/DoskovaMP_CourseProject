@@ -18,8 +18,8 @@ const LoginPage = () => {
         try {
             await login(email, password);
             navigate('/');
-        } catch (error) {
-            const message = error.response?.data?.error || 'Ошибка входа';
+        } catch (err) {
+            const message = err.response?.data?.error || 'Ошибка входа';
             setError(message);
         } finally {
             setLoading(false);
@@ -29,7 +29,7 @@ const LoginPage = () => {
     return (
         <div className="auth-page">
             <div className="auth-card">
-                <h1>Вход в систему</h1>
+                <h1>Вход</h1>
                 {error && <div className="error-message">{error}</div>}
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">

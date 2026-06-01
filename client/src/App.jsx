@@ -13,55 +13,42 @@ import MySubscriptionsPage from './pages/MySubscriptionsPage';
 import ReportsPage from './pages/ReportsPage';
 import AdminPanel from './pages/AdminPanel';
 
-const ProtectedRoute = ({ children, adminOnly = false }) => {
+const ProtectedRoute = ({ children }) => {
     const { user, loading } = useAuth();
     
     if (loading) return <div>Загрузка...</div>;
     
     if (!user) return <Navigate to="/login" />;
     
-    if (adminOnly && user.role !== 'admin') return <Navigate to="/" />;
+    return children;
+};
+
+const AdminRoute = ({ children }) => {
+    const { user, loading } = useAuth();
+    
+    if (loading) return <div>Загрузка...</div>;
+    
+    if (!user) return <Navigate to="/login" />;
+    
+    if (user.role !== 'admin') return <Navigate to="/" />;
     
     return children;
 };
 
 const AppRoutes = () => {
+    const { user, loading } = useAuth();
+    
+    if (loading) return <div>Загрузка...</div>;
+    
     return (
         <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             
-            <Route path="/" element={
-                <ProtectedRoute>
-                    <Layout>
-                        <div>Главная страница</div>
-                    </Layout>
-                </ProtectedRoute>
-            } />
-            
-            <Route path="/pools" element={
-                <ProtectedRoute>
-                    <Layout><PoolsPage /></Layout>
-                </ProtectedRoute>
-            } />
-            
-            <Route path="/coaches" element={
-                <ProtectedRoute>
-                    <Layout><CoachesPage /></Layout>
-                </ProtectedRoute>
-            } />
-            
-            <Route path="/groups" element={
-                <ProtectedRoute>
-                    <Layout><GroupsPage /></Layout>
-                </ProtectedRoute>
-            } />
-            
-            <Route path="/subscriptions" element={
-                <ProtectedRoute>
-                    <Layout><SubscriptionsPage /></Layout>
-                </ProtectedRoute>
-            } />
+            <Route path="/pools" element={<Layout><PoolsPage /></Layout>} />
+            <Route path="/coaches" element={<Layout><CoachesPage /></Layout>} />
+            <Route path="/groups" element={<Layout><GroupsPage /></Layout>} />
+            <Route path="/subscriptions" element={<Layout><SubscriptionsPage /></Layout>} />
             
             <Route path="/my-subscriptions" element={
                 <ProtectedRoute>
@@ -70,16 +57,12 @@ const AppRoutes = () => {
             } />
             
             <Route path="/reports" element={
-                <ProtectedRoute adminOnly={true}>
+                <AdminRoute>
                     <Layout><ReportsPage /></Layout>
-                </ProtectedRoute>
+                </AdminRoute>
             } />
             
-            <Route path="/admin" element={
-                <ProtectedRoute adminOnly={true}>
-                    <Layout><AdminPanel /></Layout>
-                </ProtectedRoute>
-            } />
+            <Route path="/" element={<Navigate to="/pools" />} />
         </Routes>
     );
 };

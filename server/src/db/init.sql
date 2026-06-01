@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS groups (
     number VARCHAR(100) NOT NULL,
     category VARCHAR(50) NOT NULL CHECK (category IN ('beginners', 'teens', 'adults', 'athletes')),
     pool_id INTEGER NOT NULL REFERENCES pools(id) ON DELETE CASCADE,
-    subscription_id INTEGER NOT NULL REFERENCES subscriptions(id) ON DELETE CASCADE
+    subscription_id INTEGER NOT NULL REFERENCES subscriptions(id) ON DELETE CASCADE,
+    coach_id INTEGER REFERENCES coaches(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS user_subscriptions (

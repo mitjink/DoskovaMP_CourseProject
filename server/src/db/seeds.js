@@ -64,18 +64,18 @@ const seed = async () => {
         ]);
 
         await db.query(`
-            INSERT INTO groups (number, category, pool_id, subscription_id) VALUES
-            ($1, $2, $3, $4),
-            ($5, $6, $7, $8),
-            ($9, $10, $11, $12),
-            ($13, $14, $15, $16),
-            ($17, $18, $19, $20)
+            INSERT INTO groups (number, category, pool_id, subscription_id, coach_id) VALUES
+            ($1, $2, $3, $4, $5),
+            ($6, $7, $8, $9, $10),
+            ($11, $12, $13, $14, $15),
+            ($16, $17, $18, $19, $20),
+            ($21, $22, $23, $24, $25)
         `, [
-            'Группа 1', 'beginners', 1, 2,
-            'Группа 2', 'teens', 1, 2,
-            'Группа 3', 'adults', 1, 3,
-            'Группа 4', 'beginners', 2, 2,
-            'Группа 5', 'athletes', 3, 4
+            'Группа 1', 'beginners', 1, 2, 1,
+            'Группа 2', 'teens', 1, 2, 1,
+            'Группа 3', 'adults', 1, 3, 2,
+            'Группа 4', 'beginners', 2, 2, 3,
+            'Группа 5', 'athletes', 3, 4, 4
         ]);
 
         console.log('База данных успешно заполнена');

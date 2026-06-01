@@ -8,6 +8,7 @@ const CoachesPage = () => {
     const [pools, setPools] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const [showForm, setShowForm] = useState(false);
     const [editingCoach, setEditingCoach] = useState(null);
     const [formData, setFormData] = useState({
@@ -55,15 +56,19 @@ const CoachesPage = () => {
         try {
             if (editingCoach) {
                 await updateCoach(editingCoach.id, formData);
+                setSuccess('Тренер обновлён');
             } else {
                 await createCoach(formData);
+                setSuccess('Тренер создан');
             }
             setShowForm(false);
             setEditingCoach(null);
             setFormData({ fullName: '', poolId: '', workDays: [] });
             fetchData();
+            setTimeout(() => setSuccess(''), 3000);
         } catch (err) {
             setError('Ошибка сохранения');
+            setTimeout(() => setError(''), 3000);
         }
     };
 
@@ -81,9 +86,12 @@ const CoachesPage = () => {
         if (window.confirm('Удалить тренера?')) {
             try {
                 await deleteCoach(id);
+                setSuccess('Тренер удалён');
                 fetchData();
+                setTimeout(() => setSuccess(''), 3000);
             } catch (err) {
                 setError('Ошибка удаления');
+                setTimeout(() => setError(''), 3000);
             }
         }
     };
@@ -98,9 +106,9 @@ const CoachesPage = () => {
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h1>Тренеры</h1>
+                <h1 className="page-title">Тренеры</h1>
                 {isAdmin && (
-                    <button onClick={() => {
+                    <button className="btn" onClick={() => {
                         setEditingCoach(null);
                         setFormData({ fullName: '', poolId: '', workDays: [] });
                         setShowForm(true);
@@ -110,70 +118,75 @@ const CoachesPage = () => {
                 )}
             </div>
 
-            {error && <div style={{ color: 'red' }}>{error}</div>}
+            {error && <div className="error-message">{error}</div>}
+            {success && <div className="success-message">{success}</div>}
 
             {showForm && (
-                <form onSubmit={handleSubmit} style={{ border: '1px solid #ccc', padding: '1rem', margin: '1rem 0' }}>
-                    <h3>{editingCoach ? 'Редактировать' : 'Новый тренер'}</h3>
-                    <div>
-                        <label>ФИО</label>
-                        <input
-                            type="text"
-                            value={formData.fullName}
-                            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Бассейн</label>
-                        <select
-                            value={formData.poolId}
-                            onChange={(e) => setFormData({ ...formData, poolId: parseInt(e.target.value) })}
-                            required
-                        >
-                            <option value="">Выберите бассейн</option>
-                            {pools.map(pool => (
-                                <option key={pool.id} value={pool.id}>{pool.name}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label>Дни работы</label>
-                        <div>
-                            {[1, 2, 3, 4, 5, 6, 7].map(day => (
-                                <label key={day} style={{ marginRight: '10px' }}>
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.workDays.includes(day)}
-                                        onChange={() => handleDayToggle(day)}
-                                    />
-                                    {getDayName(day)}
-                                </label>
-                            ))}
+                <div className="form-container">
+                    <h3 className="form-title">{editingCoach ? 'Редактировать' : 'Новый тренер'}</h3>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-row">
+                            <label>ФИО</label>
+                            <input
+                                type="text"
+                                value={formData.fullName}
+                                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                                required
+                            />
                         </div>
-                    </div>
-                    <div>
-                        <button type="submit">Сохранить</button>
-                        <button type="button" onClick={() => {
-                            setShowForm(false);
-                            setEditingCoach(null);
-                        }}>Отмена</button>
-                    </div>
-                </form>
+                        <div className="form-row">
+                            <label>Бассейн</label>
+                            <select
+                                value={formData.poolId}
+                                onChange={(e) => setFormData({ ...formData, poolId: parseInt(e.target.value) })}
+                                required
+                            >
+                                <option value="">Выберите бассейн</option>
+                                {pools.map(pool => (
+                                    <option key={pool.id} value={pool.id}>{pool.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-row">
+                            <label>Дни работы</label>
+                            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                {[1, 2, 3, 4, 5, 6, 7].map(day => (
+                                    <label key={day} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.workDays.includes(day)}
+                                            onChange={() => handleDayToggle(day)}
+                                        />
+                                        {getDayName(day)}
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="form-actions">
+                            <button type="submit" className="btn">Сохранить</button>
+                            <button type="button" className="btn btn-secondary" onClick={() => {
+                                setShowForm(false);
+                                setEditingCoach(null);
+                            }}>Отмена</button>
+                        </div>
+                    </form>
+                </div>
             )}
 
-            <div>
+            <div className="coaches-grid">
                 {coaches.map(coach => (
-                    <div key={coach.id} style={{ border: '1px solid #ddd', padding: '1rem', margin: '0.5rem 0' }}>
-                        <h3>{coach.full_name}</h3>
-                        <p>Бассейн: {coach.pool_name}</p>
-                        <p>Дни работы: {coach.work_days?.map(d => getDayName(d)).join(', ')}</p>
-                        {isAdmin && (
-                            <div>
-                                <button onClick={() => handleEdit(coach)}>Редактировать</button>
-                                <button onClick={() => handleDelete(coach.id)}>Удалить</button>
-                            </div>
-                        )}
+                    <div key={coach.id} className="card">
+                        <div className="card-content">
+                            <h3 className="card-title">{coach.full_name}</h3>
+                            <p className="card-text">Бассейн: {coach.pool_name}</p>
+                            <p className="card-text">Дни работы: {coach.work_days?.map(d => getDayName(d)).join(', ')}</p>
+                            {isAdmin && (
+                                <div className="card-buttons">
+                                    <button className="btn btn-edit" onClick={() => handleEdit(coach)}>Редактировать</button>
+                                    <button className="btn btn-delete" onClick={() => handleDelete(coach.id)}>Удалить</button>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 ))}
             </div>
